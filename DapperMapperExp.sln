@@ -5,6 +5,11 @@ VisualStudioVersion = 14.0.25420.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DapperMapperExp", "DapperMapperExp.csproj", "{22A1A14F-D3C9-45B6-BA04-CDFC9DD1E33A}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DataBase", "DataBase", "{EA970425-6C41-4FDC-8FBA-FB383FC6A6DD}"
+	ProjectSection(SolutionItems) = preProject
+		DataBaseCreationScript.sql = DataBaseCreationScript.sql
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
