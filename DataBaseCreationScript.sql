@@ -1,6 +1,6 @@
 ﻿USE [master]
 GO
-/****** Object:  Database [TestDB]    Script Date: 17/09/2016 23:03:19 ******/
+/****** Object:  Database [TestDB]    Script Date: 17/09/2016 23:31:40 ******/
 CREATE DATABASE [TestDB]
  CONTAINMENT = NONE
  ON  PRIMARY 
@@ -95,7 +95,7 @@ ALTER DATABASE SCOPED CONFIGURATION FOR SECONDARY SET QUERY_OPTIMIZER_HOTFIXES =
 GO
 USE [TestDB]
 GO
-/****** Object:  Table [dbo].[CustomPublicHoliday]    Script Date: 17/09/2016 23:03:19 ******/
+/****** Object:  Table [dbo].[CustomPublicHoliday]    Script Date: 17/09/2016 23:31:40 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -110,7 +110,7 @@ CREATE TABLE [dbo].[CustomPublicHoliday](
 ) ON [PRIMARY]
 
 GO
-/****** Object:  Table [dbo].[CustomPublicHolidayDay]    Script Date: 17/09/2016 23:03:19 ******/
+/****** Object:  Table [dbo].[CustomPublicHolidayDay]    Script Date: 17/09/2016 23:31:40 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -135,6 +135,8 @@ INSERT [dbo].[CustomPublicHoliday] ([CustomPublicHolidayRef], [CustomPublicHolid
 GO
 INSERT [dbo].[CustomPublicHoliday] ([CustomPublicHolidayRef], [CustomPublicHolidayName]) VALUES (N'de54a924-5b3e-464c-8baa-f9f081127804', N'ClanD')
 GO
+INSERT [dbo].[CustomPublicHolidayDay] ([CustomPublicHolidayDayRef], [CustomPublicHolidayRef], [HolidayDayName], [HolidayDate]) VALUES (N'b5c2262a-bb6f-43a2-b9ce-0b4cbea4bf90', N'09730aa9-3353-4416-82c5-a2b037e2da68', N'Halloween', CAST(N'2016-10-31' AS Date))
+GO
 INSERT [dbo].[CustomPublicHolidayDay] ([CustomPublicHolidayDayRef], [CustomPublicHolidayRef], [HolidayDayName], [HolidayDate]) VALUES (N'b2113eb5-58d0-4695-bd7a-902e32297830', N'09730aa9-3353-4416-82c5-a2b037e2da68', N'Guy Fawkes', CAST(N'2016-11-05' AS Date))
 GO
 ALTER TABLE [dbo].[CustomPublicHoliday] ADD  CONSTRAINT [DF_CustomPublicHoliday_CustomPublicHolidayRef]  DEFAULT (newid()) FOR [CustomPublicHolidayRef]
@@ -146,7 +148,7 @@ REFERENCES [dbo].[CustomPublicHoliday] ([CustomPublicHolidayRef])
 GO
 ALTER TABLE [dbo].[CustomPublicHolidayDay] CHECK CONSTRAINT [FK_CustomPublicHolidayDay_CustomPublicHoliday]
 GO
-/****** Object:  StoredProcedure [dbo].[pCustomPublicHolidays]    Script Date: 17/09/2016 23:03:19 ******/
+/****** Object:  StoredProcedure [dbo].[pCustomPublicHolidays]    Script Date: 17/09/2016 23:31:41 ******/
 SET ANSI_NULLS ON
 GO
 SET QUOTED_IDENTIFIER ON
@@ -168,6 +170,7 @@ BEGIN
 	SELECT * FROM [dbo].[CustomPublicHoliday]
 	SELECT * FROM [dbo].[CustomPublicHolidayDay]
 END
+
 
 GO
 USE [master]
