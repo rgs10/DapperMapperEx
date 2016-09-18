@@ -1,0 +1,25 @@
+﻿<?xml version="1.0" encoding="utf-8"?><Database Name="TestDB" Class="DataClasses1DataContext" xmlns="http://schemas.microsoft.com/linqtosql/dbml/2007">
+  <Connection Mode="AppSettings" ConnectionString="Data Source=DESKTOP-89NPQR1\SQLEXPRESS;Initial Catalog=TestDB;Integrated Security=True;Encrypt=False;TrustServerCertificate=True" SettingsObjectName="LinqToSqlTestProject.Properties.Settings" SettingsPropertyName="TestDBConnectionString" Provider="System.Data.SqlClient" />
+  <Table Name="dbo.CustomPublicHoliday" Member="CustomPublicHoliday">
+    <Type Name="CustomPublicHoliday">
+      <Column Name="CustomPublicHolidayRef" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="CustomPublicHolidayName" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+      <Association Name="CustomPublicHoliday_CustomPublicHolidayDay" Member="CustomPublicHolidayDay" ThisKey="CustomPublicHolidayRef" OtherKey="CustomPublicHolidayRef" Type="CustomPublicHolidayDay" />
+    </Type>
+  </Table>
+  <Table Name="dbo.CustomPublicHolidayDay" Member="CustomPublicHolidayDay">
+    <Type Name="CustomPublicHolidayDay">
+      <Column Name="CustomPublicHolidayDayRef" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" IsPrimaryKey="true" CanBeNull="false" />
+      <Column Name="CustomPublicHolidayRef" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="HolidayDayName" Type="System.String" DbType="NVarChar(50) NOT NULL" CanBeNull="false" />
+      <Column Name="HolidayDate" Type="System.DateTime" DbType="Date NOT NULL" CanBeNull="false" />
+      <Association Name="CustomPublicHoliday_CustomPublicHolidayDay" Member="CustomPublicHoliday" ThisKey="CustomPublicHolidayRef" OtherKey="CustomPublicHolidayRef" Type="CustomPublicHoliday" IsForeignKey="true" />
+    </Type>
+  </Table>
+  <Function Name="dbo.pCustomPublicHolidays" Method="pCustomPublicHolidays">
+    <ElementType Name="pCustomPublicHolidaysResult">
+      <Column Name="CustomPublicHolidayRef" Type="System.Guid" DbType="UniqueIdentifier NOT NULL" CanBeNull="false" />
+      <Column Name="CustomPublicHolidayName" Type="System.String" DbType="NVarChar(50)" CanBeNull="true" />
+    </ElementType>
+  </Function>
+</Database>
