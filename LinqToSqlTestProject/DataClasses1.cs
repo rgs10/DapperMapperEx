@@ -7,7 +7,8 @@ namespace LinqToSqlTestProject
 {
     /// <summary>
     /// http://stackoverflow.com/questions/6102605/how-do-i-use-linq-to-sql-with-stored-procedures-returning-multiple-result-sets-w
-    /// </summary>
+    /// http://kishor-naik-dotnet.blogspot.co.uk/2011/12/linq-multiple-result-set-of-procedure.html
+    ///  </summary>
     partial class DataClasses1DataContext
     {
 
