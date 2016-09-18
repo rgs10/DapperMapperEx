@@ -57,6 +57,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AnnualHoliday.cs" />
+    <Compile Include="AnnualHolidayDay.cs" />
     <Compile Include="DapperMapperHelper.cs" />
     <Compile Include="Day.cs" />
     <Compile Include="Program.cs" />

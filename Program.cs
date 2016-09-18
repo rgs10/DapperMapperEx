@@ -19,18 +19,20 @@ namespace DapperMapperExp
 
             var grid = connection.QueryMultiple("pCustomPublicHolidays", commandType: CommandType.StoredProcedure);
 
-            var customPublicHolidayList = grid.Read<AnnualHoliday>().ToList();
+            //var customPublicHolidayList = grid.Read<AnnualHoliday>().ToList();
             var customPublicHolidayDayList = grid.Read<Day>().ToList();
 
-            customPublicHolidayList = grid.MapChild(
-                customPublicHolidayList,
-                customPublicHolidayDayList,
-                customPublicHoliday => customPublicHoliday.Ref,
-                customPublicHolidayDay => customPublicHolidayDay.CustomPublicHolidayRef,
-                (customPublicHoliday, customPublicHolidayDay) =>
-                {
-                    customPublicHoliday.CustomPublicHolidayDays = customPublicHolidayDay.ToList();
-                }).ToList();
+            var resultList = grid.Read<AnnualHolidayDay>().ToList();
+
+            //customPublicHolidayList = grid.MapChild(
+            //    customPublicHolidayList,
+            //    customPublicHolidayDayList,
+            //    customPublicHoliday => customPublicHoliday.Ref,
+            //    customPublicHolidayDay => customPublicHolidayDay.CustomPublicHolidayRef,
+            //    (customPublicHoliday, customPublicHolidayDay) =>
+            //    {
+            //        customPublicHoliday.CustomPublicHolidayDays = customPublicHolidayDay.ToList();
+            //    }).ToList();
         }
 
         private static void SetupDapperMappings()
@@ -45,6 +47,10 @@ namespace DapperMapperExp
             mappings.RegisterType<AnnualHoliday>()
                 .MapProperty(x => x.Ref).ToColumn("CustomPublicHolidayRef")
                 .MapProperty(x => x.HolidayGroupName).ToColumn("CustomPublicHolidayName");
+
+            mappings.RegisterType<AnnualHolidayDay>()
+                .MapProperty(x => x.AnnualHolidayRef).ToColumn("CustomPublicHolidayRef")
+                .MapProperty(x => x.DayRef).ToColumn("CustomPublicHolidayDayRef");
 
             mappings.RegisterWithDapper();
         }
