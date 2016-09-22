@@ -1,7 +1,7 @@
-using System;
-
 namespace ComplexObjectMapping
 {
+    using System;
+
     public class Player
     {
         public Guid PlayerId { get; set; }

@@ -1,8 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace ComplexObjectMapping
+﻿namespace ComplexObjectMapping
 {
+    using System;
+    using System.Collections.Generic;
+
     public class Team
     {
         public Guid TeamId { get; set; }

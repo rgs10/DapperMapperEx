@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Dapper;
-
-namespace ComplexObjectMapping
+﻿namespace ComplexObjectMapping
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Data.SqlClient;
+    using System.Linq;
+    using Dapper;
     public class Program
     {
         const string sql = "select t.TeamRef as TeamId, " +
@@ -35,21 +32,19 @@ namespace ComplexObjectMapping
                     // - IMPORTANT: Let Slapper.Automapper know how to do the mapping;
                     //   let it know the primary key for each POCO.
                     // - Must also use underscore notation ("_") to name parameters;
-                    //   see Slapper.Automapper docs.
-                    Slapper.AutoMapper.Configuration.AddIdentifiers(typeof(Team), new List<string> { "TeamId" });
-                    Slapper.AutoMapper.Configuration.AddIdentifiers(typeof(Player), new List<string> { "PlayerId", "TeamID" });
+                    ////see Slapper.Automapper docs.
+                    //Slapper.AutoMapper.Configuration.AddIdentifiers(typeof(Team), new List<string> { "TeamId" });
+                    //Slapper.AutoMapper.Configuration.AddIdentifiers(typeof(Player), new List<string> { "PlayerId" });
 
                     var testTeam = (Slapper.AutoMapper.MapDynamic<Team>(test) as IEnumerable<Team>).ToList();
 
-                    //var testTeam = (Slapper.AutoMapper.MapDynamic<Team>(test) as IEnumerable<Team>);
-                    //var result = Slapper.AutoMapper.Map<Team>(test, true);
-                    //foreach (var c in testTeam)
-                    //{
-                    //    foreach (var p in c.Players)
-                    //    {
-                    //        Console.Write("TeamName: {0}: TeamMember: {1}\n", c.TeamName, p.PlayerName);
-                    //    }
-                    //}
+                    foreach (var c in testTeam)
+                    {
+                        foreach (var p in c.Players)
+                        {
+                            Console.Write("TeamName: {0}: TeamMember: {1}\n", c.TeamName, p.Name);
+                        }
+                    }
                     Console.ReadKey();
                 }
             }
