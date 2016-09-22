@@ -4,8 +4,11 @@ namespace ComplexObjectMapping
 
     public class Player
     {
-        public Guid PlayerId { get; set; }
-        public Guid TeamID { get; set; }
+        //[Slapper.AutoMapper.Id]
+        public Guid PlayerRef { get; set; }
+
+        //[Slapper.AutoMapper.Id]
+        public Guid TeamRef { get; set; }
         public string Name { get; set; }
     }
 }

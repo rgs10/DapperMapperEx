@@ -7,10 +7,10 @@
     using Dapper;
     public class Program
     {
-        const string sql = "select t.TeamRef as TeamId, " +
+        const string sql = "select t.TeamRef as TeamRef, " +
                            "t.TeamName as TeamName, " +
-                           "p.PlayerRef as Players_PlayerId, " +
-                           "p.TeamRef as Players_TeamId, " +
+                           "p.PlayerRef as Players_PlayerRef, " +
+                           "p.TeamRef as Players_TeamRef, " +
                            "p.PlayerName as Players_Name " +
                            "from Team t " +
                            "join Player p on t.TeamRef = p.TeamRef";
@@ -33,8 +33,8 @@
                     //   let it know the primary key for each POCO.
                     // - Must also use underscore notation ("_") to name parameters;
                     ////see Slapper.Automapper docs.
-                    //Slapper.AutoMapper.Configuration.AddIdentifiers(typeof(Team), new List<string> { "TeamId" });
-                    //Slapper.AutoMapper.Configuration.AddIdentifiers(typeof(Player), new List<string> { "PlayerId" });
+                    Slapper.AutoMapper.Configuration.AddIdentifiers(typeof(Team), new List<string> { "TeamRef" });
+                    //Slapper.AutoMapper.Configuration.AddIdentifiers(typeof(Player), new List<string> { "PlayerRef" });
 
                     var testTeam = (Slapper.AutoMapper.MapDynamic<Team>(test) as IEnumerable<Team>).ToList();
 
@@ -42,7 +42,7 @@
                     {
                         foreach (var p in c.Players)
                         {
-                            Console.Write("TeamName: {0}: TeamMember: {1}\n", c.TeamName, p.Name);
+                            Console.Write("TeamName: {0}: TeamMember: {1}  PlayerRef: {2}\n", c.TeamName, p.Name, p.PlayerRef);
                         }
                     }
                     Console.ReadKey();

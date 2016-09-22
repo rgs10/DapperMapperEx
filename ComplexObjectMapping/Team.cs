@@ -5,7 +5,8 @@
 
     public class Team
     {
-        public Guid TeamId { get; set; }
+        //[Slapper.AutoMapper.Id]
+        public Guid TeamRef { get; set; }
         public string TeamName { get; set; }
 
         public IList<Player> Players { get; set; }
