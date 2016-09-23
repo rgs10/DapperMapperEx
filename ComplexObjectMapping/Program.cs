@@ -1,12 +1,19 @@
-﻿namespace ComplexObjectMapping
+﻿using System.Data;
+using System.Runtime.CompilerServices;
+using Dapper;
+using DapperWrapper.Interfaces;
+
+namespace ComplexObjectMapping
 {
     using System;
     using System.Collections.Generic;
     using System.Data.SqlClient;
     using System.Linq;
-    using Dapper;
+
     public class Program
     {
+        
+
         const string sql = "select t.TeamRef as TeamRef, " +
                            "t.TeamName as TeamName, " +
                            "p.PlayerRef as Players_PlayerRef, " +
@@ -16,7 +23,7 @@
                            "join Player p on t.TeamRef = p.TeamRef";
 
         private static string connectionString =
-            @"Data Source=DESKTOP-89NPQR1\SQLEXPRESS;Initial Catalog=TestDB;Integrated Security=True;Encrypt=False;TrustServerCertificate=True";
+            @"Data Source=LAPTOP-RSMITH\SQLEXPRESS;Initial Catalog=TestDB;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
         public static void Main(string[] args)
         {
@@ -33,8 +40,8 @@
                     //   let it know the primary key for each POCO.
                     // - Must also use underscore notation ("_") to name parameters;
                     ////see Slapper.Automapper docs.
-                    Slapper.AutoMapper.Configuration.AddIdentifiers(typeof(Team), new List<string> { "TeamRef" });
-                    //Slapper.AutoMapper.Configuration.AddIdentifiers(typeof(Player), new List<string> { "PlayerRef" });
+                    //Slapper.AutoMapper.Configuration.AddIdentifiers(typeof(Team), new List<string> {"TeamRef"});
+                    Slapper.AutoMapper.Configuration.AddIdentifiers(typeof(Player), new List<string> { "PlayerRef" });
 
                     var testTeam = (Slapper.AutoMapper.MapDynamic<Team>(test) as IEnumerable<Team>).ToList();
 
@@ -42,7 +49,8 @@
                     {
                         foreach (var p in c.Players)
                         {
-                            Console.Write("TeamName: {0}: TeamMember: {1}  PlayerRef: {2}\n", c.TeamName, p.Name, p.PlayerRef);
+                            Console.Write("TeamName: {0}: TeamMember: {1}  PlayerRef: {2}\n", c.TeamName, p.Name,
+                                p.PlayerRef);
                         }
                     }
                     Console.ReadKey();
@@ -50,4 +58,50 @@
             }
         }
     }
+
+    public class MultipleQueryClass
+    {
+        protected IDbExecutor dbExecutor;
+
+        private static string connectionString =
+            @"Data Source=(localdb)\ProjectsV13;Initial Catalog=Database2;Integrated Security=True;Pooling=False;Connect Timeout=30";
+
+
+        public void GetResultsList()
+        {
+            using (var conn = new SqlConnection(connectionString))
+            {
+                //conn.QueryMultiple()
+
+            }
+
+
+            //var grid = this.dbExecutor.QueryMultiple("pCustomPublicHoliday", commandType: CommandType.StoredProcedure);
+            //var customPublicHolidayList = grid.Read<CustomPublicHoliday>().ToList();
+            //var customPublicHolidayDateList = grid.Read<CustomPublicHolidayDate>()?.ToList() ?? new List<CustomPublicHolidayDate>();
+
+            //customPublicHolidayList = grid.MapChild(
+            //    customPublicHolidayList,
+            //    customPublicHolidayDateList,
+            //    customPublicHoliday => customPublicHoliday.Ref,
+            //    customPublicHolidayDate => customPublicHolidayDate.CustomPublicHolidayRef,
+            //    (customPublicHoliday, customPublicHolidayDate) => { customPublicHoliday.CustomPublicHolidayDates = customPublicHolidayDate.ToList(); }
+            //).ToList();
+
+            //customPublicHolidayList.ForEach(p =>
+            //{
+            //    p.Dirty = false;
+            //    p.CustomPublicHolidayDates?.ForEach(x => x.Dirty = false);
+            //});
+
+            //return customPublicHolidayList;
+
+
+        }
+
+        
+
+    }
 }
+
+
