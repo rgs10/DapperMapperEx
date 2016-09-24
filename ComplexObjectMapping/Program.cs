@@ -21,8 +21,6 @@ namespace ComplexObjectMapping
         }
     }
 
-
-
     public class DapperSlapperExampleClass
     {
         public IList<Team> GetResultsList()
@@ -51,7 +49,7 @@ namespace ComplexObjectMapping
                     // - Must also use underscore notation ("_") to name parameters;
                     ////see Slapper.Automapper docs.
                     Slapper.AutoMapper.Configuration.AddIdentifiers(typeof(Team), new List<string> { "TeamRef" });
-                    Slapper.AutoMapper.Configuration.AddIdentifiers(typeof(Player), new List<string> { "PlayerRef" });
+                    //Slapper.AutoMapper.Configuration.AddIdentifiers(typeof(Player), new List<string> { "PlayerRef" });
 
                     var testTeam = (Slapper.AutoMapper.MapDynamic<Team>(test) as IEnumerable<Team>).ToList();
 
@@ -70,13 +68,11 @@ namespace ComplexObjectMapping
         }
     }
 
-
-
     public class MultipleQueryClass
     {
         protected IDbExecutor dbExecutor;
 
-        private static string connectionString = ConfigurationManager.ConnectionStrings["Test"].ConnectionString;
+        private readonly string connectionString = ConfigurationManager.ConnectionStrings["Test"].ConnectionString;
         /// <summary>
         /// Using single stored proc to get all results (two tables)
         /// and mapping using custom helper function
