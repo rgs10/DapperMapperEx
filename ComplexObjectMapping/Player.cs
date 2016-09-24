@@ -9,6 +9,6 @@ namespace ComplexObjectMapping
 
         //[Slapper.AutoMapper.Id]
         public Guid TeamRef { get; set; }
-        public string Name { get; set; }
+        public string PlayerName { get; set; }
     }
 }

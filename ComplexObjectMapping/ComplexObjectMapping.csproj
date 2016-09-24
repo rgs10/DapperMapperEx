@@ -55,6 +55,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DapperMapperHelper.cs" />
     <Compile Include="Dapper\DapperHelper.cs" />
     <Compile Include="Player.cs" />
     <Compile Include="Program.cs" />

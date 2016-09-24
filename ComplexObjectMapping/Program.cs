@@ -1,11 +1,9 @@
 ﻿using System.Data;
-using System.Runtime.CompilerServices;
 using Dapper;
 using DapperWrapper.Interfaces;
 
 namespace ComplexObjectMapping
 {
-    using System;
     using System.Collections.Generic;
     using System.Data.SqlClient;
     using System.Linq;
@@ -13,20 +11,33 @@ namespace ComplexObjectMapping
     public class Program
     {
         
+        public static void Main(string[] args)
+        {
+            var dapperMapperClass = new DapperSlapperExampleClass();
+            var results1 = dapperMapperClass.GetResultsList();
 
-        const string sql = "select t.TeamRef as TeamRef, " +
+            var multipleQueryClass = new MultipleQueryClass();
+            var results2 = multipleQueryClass.GetResultsList();
+        }
+    }
+
+
+
+    public class DapperSlapperExampleClass
+    {
+        public IList<Team> GetResultsList()
+        {
+            const string sql = "select t.TeamRef as TeamRef, " +
                            "t.TeamName as TeamName, " +
                            "p.PlayerRef as Players_PlayerRef, " +
                            "p.TeamRef as Players_TeamRef, " +
-                           "p.PlayerName as Players_Name " +
+                           "p.PlayerName as Players_PlayerName " +
                            "from Team t " +
                            "join Player p on t.TeamRef = p.TeamRef";
 
-        private static string connectionString =
-            @"Data Source=LAPTOP-RSMITH\SQLEXPRESS;Initial Catalog=TestDB;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            var connectionString =
+            @"Data Source=DESKTOP-89NPQR1\SQLEXPRESS;Initial Catalog=TestDB;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
 
-        public static void Main(string[] args)
-        {
             using (var conn = new SqlConnection(connectionString))
             {
                 conn.Open();
@@ -40,68 +51,57 @@ namespace ComplexObjectMapping
                     //   let it know the primary key for each POCO.
                     // - Must also use underscore notation ("_") to name parameters;
                     ////see Slapper.Automapper docs.
-                    //Slapper.AutoMapper.Configuration.AddIdentifiers(typeof(Team), new List<string> {"TeamRef"});
-                    Slapper.AutoMapper.Configuration.AddIdentifiers(typeof(Player), new List<string> { "PlayerRef" });
+                    Slapper.AutoMapper.Configuration.AddIdentifiers(typeof(Team), new List<string> { "TeamRef" });
+                    //Slapper.AutoMapper.Configuration.AddIdentifiers(typeof(Player), new List<string> { "PlayerRef" });
 
                     var testTeam = (Slapper.AutoMapper.MapDynamic<Team>(test) as IEnumerable<Team>).ToList();
 
-                    foreach (var c in testTeam)
-                    {
-                        foreach (var p in c.Players)
-                        {
-                            Console.Write("TeamName: {0}: TeamMember: {1}  PlayerRef: {2}\n", c.TeamName, p.Name,
-                                p.PlayerRef);
-                        }
-                    }
-                    Console.ReadKey();
+                    //foreach (var c in testTeam)
+                    //{
+                    //    foreach (var p in c.Players)
+                    //    {
+                    //        Console.Write("TeamName: {0}: TeamMember: {1}  PlayerRef: {2}\n", c.TeamName, p.PlayerName,
+                    //            p.PlayerRef);
+                    //    }
+                    //}
+                    //Console.ReadKey();
+                    return testTeam;
                 }
             }
         }
     }
+
+
 
     public class MultipleQueryClass
     {
         protected IDbExecutor dbExecutor;
 
         private static string connectionString =
-            @"Data Source=(localdb)\ProjectsV13;Initial Catalog=Database2;Integrated Security=True;Pooling=False;Connect Timeout=30";
-
-
-        public void GetResultsList()
+            @"Data Source=DESKTOP-89NPQR1\SQLEXPRESS;Initial Catalog=TestDB;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+        /// <summary>
+        /// Using single stored proc to get all results (two tables)
+        /// and mapping using custom helper function
+        /// </summary>
+        /// <returns></returns>
+        public IList<Team> GetResultsList()
         {
             using (var conn = new SqlConnection(connectionString))
             {
-                //conn.QueryMultiple()
+                var grid = conn.QueryMultiple("pGetAll", commandType: CommandType.StoredProcedure);
+                var teamList = grid.Read<Team>().ToList();
+                var playerList = grid.Read<Player>().ToList() ?? new List<Player>();
+                
+                teamList = grid.MapChild(
+                    teamList,
+                    playerList,
+                    team => team.TeamRef,
+                    player => player.TeamRef,
+                    (team, player) => { team.Players = player.ToList(); }
+                    ).ToList();
 
+                return teamList;
             }
-
-
-            //var grid = this.dbExecutor.QueryMultiple("pCustomPublicHoliday", commandType: CommandType.StoredProcedure);
-            //var customPublicHolidayList = grid.Read<CustomPublicHoliday>().ToList();
-            //var customPublicHolidayDateList = grid.Read<CustomPublicHolidayDate>()?.ToList() ?? new List<CustomPublicHolidayDate>();
-
-            //customPublicHolidayList = grid.MapChild(
-            //    customPublicHolidayList,
-            //    customPublicHolidayDateList,
-            //    customPublicHoliday => customPublicHoliday.Ref,
-            //    customPublicHolidayDate => customPublicHolidayDate.CustomPublicHolidayRef,
-            //    (customPublicHoliday, customPublicHolidayDate) => { customPublicHoliday.CustomPublicHolidayDates = customPublicHolidayDate.ToList(); }
-            //).ToList();
-
-            //customPublicHolidayList.ForEach(p =>
-            //{
-            //    p.Dirty = false;
-            //    p.CustomPublicHolidayDates?.ForEach(x => x.Dirty = false);
-            //});
-
-            //return customPublicHolidayList;
-
-
         }
-
-        
-
     }
 }
-
-
