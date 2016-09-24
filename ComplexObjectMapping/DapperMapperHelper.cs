@@ -23,6 +23,11 @@ namespace ComplexObjectMapping
                 {
                     addChildren(item, children);
                 }
+
+                if (children == null)
+                {
+                    addChildren(item, new List<TSecond>());
+                }
             }
             return parent;
         }

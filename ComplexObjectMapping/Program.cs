@@ -1,4 +1,5 @@
-﻿using System.Data;
+﻿using System.Configuration;
+using System.Data;
 using Dapper;
 using DapperWrapper.Interfaces;
 
@@ -10,7 +11,6 @@ namespace ComplexObjectMapping
 
     public class Program
     {
-        
         public static void Main(string[] args)
         {
             var dapperMapperClass = new DapperSlapperExampleClass();
@@ -33,10 +33,9 @@ namespace ComplexObjectMapping
                            "p.TeamRef as Players_TeamRef, " +
                            "p.PlayerName as Players_PlayerName " +
                            "from Team t " +
-                           "join Player p on t.TeamRef = p.TeamRef";
+                           "left join Player p on t.TeamRef = p.TeamRef";
 
-            var connectionString =
-            @"Data Source=DESKTOP-89NPQR1\SQLEXPRESS;Initial Catalog=TestDB;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+            var connectionString = ConfigurationManager.ConnectionStrings["Test"].ConnectionString;
 
             using (var conn = new SqlConnection(connectionString))
             {
@@ -52,7 +51,7 @@ namespace ComplexObjectMapping
                     // - Must also use underscore notation ("_") to name parameters;
                     ////see Slapper.Automapper docs.
                     Slapper.AutoMapper.Configuration.AddIdentifiers(typeof(Team), new List<string> { "TeamRef" });
-                    //Slapper.AutoMapper.Configuration.AddIdentifiers(typeof(Player), new List<string> { "PlayerRef" });
+                    Slapper.AutoMapper.Configuration.AddIdentifiers(typeof(Player), new List<string> { "PlayerRef" });
 
                     var testTeam = (Slapper.AutoMapper.MapDynamic<Team>(test) as IEnumerable<Team>).ToList();
 
@@ -77,8 +76,7 @@ namespace ComplexObjectMapping
     {
         protected IDbExecutor dbExecutor;
 
-        private static string connectionString =
-            @"Data Source=DESKTOP-89NPQR1\SQLEXPRESS;Initial Catalog=TestDB;Integrated Security=True;Connect Timeout=15;Encrypt=False;TrustServerCertificate=True;ApplicationIntent=ReadWrite;MultiSubnetFailover=False";
+        private static string connectionString = ConfigurationManager.ConnectionStrings["Test"].ConnectionString;
         /// <summary>
         /// Using single stored proc to get all results (two tables)
         /// and mapping using custom helper function
@@ -90,7 +88,7 @@ namespace ComplexObjectMapping
             {
                 var grid = conn.QueryMultiple("pGetAll", commandType: CommandType.StoredProcedure);
                 var teamList = grid.Read<Team>().ToList();
-                var playerList = grid.Read<Player>().ToList() ?? new List<Player>();
+                var playerList = grid.Read<Player>().ToList();
                 
                 teamList = grid.MapChild(
                     teamList,
